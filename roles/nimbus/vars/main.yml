@@ -1,0 +1,13 @@
+---
+
+ - { regexp: 'storm.zookeeper.servers', line: 'storm.zookeeper.servers: {{storm_servers}}' }
+                    - { regexp: 'storm.local.dir', line: 'storm.local.dir: {{local_dir}}' }
+                    - { regexp: 'nimbus.host', line: 'nimbus.host: {{nimb_host}}' }
+                    - { regexp: 'supervisor.slots.ports', line: 'supervisor.slots.ports: {{supervisor_port}}' }
+
+
+storm_servers: "{{storm.zookeeper.servers | default('localhost')}}"
+local_dir: "{{storm.local.dir | default('/home/ubuntu/apache-storm-1.2.3')}}"
+nimb_host: "{{nimbus.host | default('localhost')}}"
+supervisor_port: "{{supervisor.slots.ports | default('6700,67')}}"
+

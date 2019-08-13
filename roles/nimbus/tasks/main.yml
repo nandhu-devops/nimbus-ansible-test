@@ -1,0 +1,19 @@
+---
+
+ - name: download apache storm
+   get_url: dest=/home/ubuntu/apache-storm-{{storm_version}}.tar.gz url="{{apache_mirror}}/storm/apache-storm-{{storm_version}}/apache-storm-{{storm_version}}.tar.gz"
+
+ - name: uncompress the storm package
+   unarchive: copy=no creates=/home/ubuntu/apache-storm-{{storm_version}} 
+
+ - name: configure storm.yaml
+   lineinfile: path="/home/ubuntu/apache-storm-{{storm_version}}/conf/storm.yaml" regexp="{{item.regexp}}" line="{{item.line}}" state=present backrefs=yes backup=yes
+            with_items:
+                    - { regexp: 'storm.zookeeper.servers', line: 'storm.zookeeper.servers: {{storm_servers}}' }
+                    - { regexp: 'storm.local.dir', line: 'storm.local.dir: {{local_dir}}' }
+                    - { regexp: 'nimbus.host', line: 'nimbus.host: {{nimb_host}}' }
+                    - { regexp: 'supervisor.slots.ports', line: 'supervisor.slots.ports: {{supervisor_port}}' }
+            notify:
+                    - restart supervisor
+                    - restart nimbus
+                    - restart ui
